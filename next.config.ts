@@ -2,6 +2,18 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  async rewrites() {
+    return [
+      {
+        source: "/jobtrack",
+        destination: "https://jobtrack.lxhungdp.workers.dev/jobtrack",
+      },
+      {
+        source: "/jobtrack/:path*",
+        destination: "https://jobtrack.lxhungdp.workers.dev/jobtrack/:path*",
+      },
+    ];
+  },
   async redirects() {
     return [
       { source: "/about", destination: "/", permanent: true },

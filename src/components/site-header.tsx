@@ -17,6 +17,7 @@ export function SiteHeader() {
             <LandingLink section="engineering-projects">Engineering</LandingLink>
             <LandingLink section="blogs">Blogs</LandingLink>
             <LandingLink section="contacts">Contacts</LandingLink>
+            <Link href="/jobtrack" prefetch={false} className="site-nav__app">JobTrack</Link>
           </nav>
           <ThemeToggle />
         </div>
