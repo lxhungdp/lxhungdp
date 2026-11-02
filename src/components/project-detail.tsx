@@ -15,7 +15,7 @@ function ProjectSection({ id, title, children }: { id: string; title: string; ch
 
 export function ProjectDetail({ project }: { project: Project }) {
   const related = (project.related ?? []).map(getProject).filter((entry) => entry !== undefined);
-  const pending = !project.overview && project.contributions.length === 0;
+  const pending = !project.overview;
 
   return (
     <article className="shell page project-page">
@@ -49,6 +49,10 @@ export function ProjectDetail({ project }: { project: Project }) {
       {pending ? <div className="project-pending"><span className="label">Project profile</span><p>Details will be added soon.</p></div> : <div className="project-body">
         {project.overview && <ProjectSection id="overview-title" title="Overview">
           {project.introLink && <p><a href={project.introLink.href} className="link-out" target="_blank" rel="noopener noreferrer">{project.introLink.label} <span aria-hidden="true">↗</span></a></p>}
+          {project.demoNote && <p className="project-demo-note">
+            {project.demoNote}{" "}
+            <Link href="/contact" className="link">Contact me for further information <span aria-hidden="true">→</span></Link>
+          </p>}
           <p>{project.overview}</p>
         </ProjectSection>}
         {project.registration && <ProjectSection id="registration-title" title="Registration">
@@ -58,7 +62,20 @@ export function ProjectDetail({ project }: { project: Project }) {
         {project.technicalCapabilities && <ProjectSection id="capabilities-title" title="Technical capabilities">
           <p>{project.technicalCapabilities.problem}</p>
           <h3>Technical scope</h3>
-          <ul>{project.technicalCapabilities.scope.map((item) => <li key={item}>{item}</li>)}</ul>
+          <ul>{project.technicalCapabilities.scope.map((item) => {
+            const capability = typeof item === "string" ? { text: item } : item;
+            return (
+              <li key={capability.text}>
+                {capability.text}
+                {capability.link ? (
+                  <>
+                    <br />
+                    <Link href={capability.link.href} className="link">{capability.link.label} <span aria-hidden="true">→</span></Link>
+                  </>
+                ) : null}
+              </li>
+            );
+          })}</ul>
         </ProjectSection>}
         {Boolean(project.gallery?.length || project.mediaNote) && <ProjectSection id="media-title" title={project.video ? "Images & videos" : "Images"}>
           {Boolean(project.gallery?.length) && <div className="project-gallery">{project.gallery?.map((item) =>
@@ -72,7 +89,6 @@ export function ProjectDetail({ project }: { project: Project }) {
           {project.mediaNote && <p className="project-media-note">{project.mediaNote}</p>}
         </ProjectSection>}
         {project.inPractice && <ProjectSection id="practice-title" title="In practice"><p>{project.inPractice}</p></ProjectSection>}
-        {project.contributions.length > 0 && <ProjectSection id="contribution-title" title="Contribution"><ul>{project.contributions.map((item) => <li key={item}>{item}</li>)}</ul></ProjectSection>}
         {project.outcome && <ProjectSection id="outcome-title" title="Outcome"><p>{project.outcome}</p></ProjectSection>}
       </div>}
 

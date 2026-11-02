@@ -8,16 +8,22 @@ export type Project = {
   summary: string;
   overview: string;
   introLink?: { label: string; href: string };
+  demoNote?: string;
   registration?: { statement: string; label: string; href: string };
   location?: string;
   role?: string;
   status?: string;
   hideHeroMetadata?: boolean;
   tags: string[];
-  contributions: string[];
   technicalCapabilities?: {
     problem: string;
-    scope: string[];
+    scope: Array<
+      | string
+      | {
+          text: string;
+          link?: { label: string; href: string };
+        }
+    >;
   };
   mediaNote?: string;
   gallery?: { src: string; alt: string; caption: string; width: number; height: number }[];
@@ -33,6 +39,9 @@ export type Project = {
   related?: string[];
 };
 
+const internalProjectDemoNote =
+  "This demo is a limited preview of an internally developed project.";
+
 export const projects: Project[] = [
   {
     slug: "south-commuter-railway",
@@ -44,11 +53,6 @@ export const projects: Project[] = [
     location: "Philippines",
     role: "Lead structural design and construction engineering",
     tags: ["Railway bridges", "Segmental concrete", "Staged construction"],
-    contributions: [
-      "Lead structural design and construction engineering for concrete railway bridge works.",
-      "Analyse balanced-cantilever and span-by-span erection using launching gantries.",
-      "Connect bridge design with digital geometry-control workflows for short-line segment casting.",
-    ],
     featured: true,
     related: ["castcontrol"],
   },
@@ -62,11 +66,6 @@ export const projects: Project[] = [
     location: "South Korea",
     role: "Structural modelling and verification",
     tags: ["Cable-stayed bridge", "Seismic analysis", "Steel structures"],
-    contributions: [
-      "Develop global structural models and detailed analyses.",
-      "Evaluate structural response under earthquake loading.",
-      "Prepare design calculations and verification documents for technical review and approval.",
-    ],
     featured: true,
   },
   {
@@ -79,11 +78,6 @@ export const projects: Project[] = [
     location: "South Korea",
     role: "Structural analysis and design checks",
     tags: ["Steel box girder", "Connections", "Temporary works"],
-    contributions: [
-      "Model and analyse the steel composite box-girder bridge.",
-      "Check steel connections and temporary formwork systems.",
-      "Prepare engineering calculations, drawings and verification documentation.",
-    ],
     featured: true,
   },
   {
@@ -96,10 +90,6 @@ export const projects: Project[] = [
     location: "Vietnam",
     role: "Structural design and construction-stage analysis",
     tags: ["Balanced cantilever", "Construction stages", "Concrete bridge"],
-    contributions: [
-      "Perform detailed bridge design work.",
-      "Analyse the structure through balanced-cantilever construction stages.",
-    ],
     featured: true,
   },
   {
@@ -120,11 +110,6 @@ export const projects: Project[] = [
     status: "Live product",
     hideHeroMetadata: true,
     tags: ["Bridge geometry", "Construction control", "Web application"],
-    contributions: [
-      "Translate short-line segmental construction procedures into digital geometry-control workflows.",
-      "Calculate span and segment coordinates from complex bridge alignments.",
-      "Connect field data, engineering review and approved coordinate distribution in one workflow.",
-    ],
     image: "/images/castcontrol.png",
     imageAlt: "CastControl product page describing the digital geometry-control platform for segmental bridge construction",
     imageWidth: 1440,
@@ -149,29 +134,23 @@ export const projects: Project[] = [
     category: "Engineering software",
     summary: "Browser-based section resistance and factored demand checks for reinforced concrete under axial force and biaxial bending.",
     overview:
-      "Reinforced Concrete Section Designer evaluates the axial-force and biaxial-bending resistance of short reinforced-concrete cross sections. It brings irregular concrete geometry, openings, discrete reinforcement, material response, P–Mx–My resistance surfaces and factored demand checks into one browser workspace. Its current scope is section resistance and demand checks, not complete column or member design.",
+      "Browser-based P–Mx–My resistance and factored-demand checks for short reinforced-concrete sections with arbitrary geometry, openings and discrete reinforcement.",
     introLink: { label: "Open live demo", href: "https://pmdesigner.vercel.app/" },
+    demoNote: internalProjectDemoNote,
     role: "Engineering method and software development",
     status: "Live demo",
     hideHeroMetadata: true,
     tags: ["Reinforced concrete", "P–Mx–My", "Numerical analysis"],
     technicalCapabilities: {
       problem:
-        "The application takes an irregular reinforced-concrete section from a verified numerical model to auditable P–Mx–My resistance results and a factored section demand check.",
+        "The calculation path remains explicit: section geometry → compatible strain field → P, Mx, My → resistance surface → factored-demand utilization.",
       scope: [
-        "Build multiple polygonal concrete regions and openings, with discrete reinforcement and material assignments.",
-        "Evaluate section response using independent stress–strain integration and equivalent rectangular stress-block methods.",
-        "Inspect nominal and design P–Mx–My surfaces, directional meridians, fixed-axial-force contours and the underlying chart data.",
-        "Check factored section demands with utilization, capacity intersections, solver convergence and a compatible strain field.",
-        "Use the implemented KDS section-check routes; ACI, Eurocode and AS profiles remain calculation previews rather than released code checks.",
-        "Export browser-side projects, PDF design-preview reports, calculation workbooks and Excel or DXF mesh audit data.",
+        "Purpose-built integration kernel: arbitrary polygons and openings are triangulated, then three Gauss points per triangle recover P, Mx and My exactly for a linear stress field and retain the stress gradient for nonlinear materials. No element stiffness matrices or global FEM assembly are required; the kernel runs locally in a browser Web Worker for immediate updates.",
+        "Two independent mechanics pipelines: nonlinear stress–strain integration and an equivalent rectangular stress block with exact polygon clipping. Each pipeline provides forward resistance-surface generation and inverse factored-demand solving.",
+        "Control the number of strain-domain stations and bending directions, or use adaptive sampling to refine them against convergence tolerances for smoother P–Mx–My surfaces, directional meridians and fixed-P contours.",
+        "Import and export project or section data through Excel and DXF drawings; generate calculation workbooks and PDF design-preview reports. Code profiles include KDS Main and KDS 14 20 20:2022 Appendix (implemented section checks), plus ACI 318-19(22), EN 1992-1-1:2004, AS 3600:2018 Amendments 1 and 2, and custom/user-defined profiles (calculation previews).",
       ],
     },
-    contributions: [
-      "Build an editor for irregular concrete sections, openings and discrete reinforcement.",
-      "Expose the verified numerical mesh, interaction surfaces and chart data for review.",
-      "Provide section-level demand checks and exportable engineering evidence.",
-    ],
     image: "/images/rcdesigner/interaction-surface-and-slices.png",
     imageAlt: "Three-dimensional P–Mx–My resistance surface with a directional meridian, fixed-axial-force contour and section data",
     imageWidth: 3006,
@@ -226,43 +205,41 @@ export const projects: Project[] = [
     inPractice:
       "Wookyung Construction has used PUS Pro Program to design and verify dozens of steel box-girder bridge projects in South Korea.",
     tags: [],
-    contributions: [],
   },
   {
     slug: "truss-designer",
     path: "/truss",
-    title: "Truss Design",
+    title: "Truss Bridge Designer",
     category: "Engineering software",
-    summary: "Three-dimensional truss and frame modelling, analysis and scoped steel member checks.",
+    summary: "Automated truss-bridge design workspace with FEM analysis, code checks and pedestrian vibration analysis.",
     overview:
-      "Truss Design connects structural modelling, loads, frame analysis, result diagrams and steel H-member verification in one workspace. It uses a browser frame solver by default, with an optional OpenSees path, and provides KDS/AISC checks within the documented H-section scope. This is ongoing internal development for automating the company's design workflow; the product is not publicly released, and the linked application is a demo.",
+      "Automated design workspace for steel truss bridges, combining FEM analysis, member checks, moving-load influence lines and pedestrian vibration analysis.",
     introLink: { label: "Open Truss demo", href: "https://struct-tools.vercel.app/truss/" },
-    role: "Engineering method and software development",
+    demoNote: internalProjectDemoNote,
+    role: "Bridge engineering and software development",
     status: "In development",
     hideHeroMetadata: true,
-    tags: ["Truss analysis", "Frame FEM", "Steel member checks"],
+    tags: ["Truss bridges", "FEM analysis", "Vibration analysis"],
     technicalCapabilities: {
       problem:
-        "A structural model needs a traceable path from geometry and loads to member forces and the checks that apply to its sections.",
+        "Geometry, loading, analysis and verification remain linked to one structural model.",
       scope: [
-        "Model three-dimensional nodes, members, restraints, steel properties and applied loads.",
-        "Run linear frame analysis with the browser solver or an explicitly selected OpenSees backend.",
-        "Review deformed shapes, reactions and member-force diagrams on the model.",
-        "Inspect KDS 2024 or AISC steel H-member checks within the implemented section and design-method scope.",
+        "Use a purpose-built, high-performance frame solver for immediate reactions, deformed shapes and member-force results as the model or loading changes.",
+        "Use a modelling wizard to rapidly generate typical pony-truss bridge configurations.",
+        "Run vibration analysis for pedestrian bridges.",
+        "Perform code-based steel member checks within the implemented scope.",
+        "Generate and compare influence lines for selected truss members.",
       ],
     },
-    contributions: [
-      "Bring structural modelling, analysis results and member verification into one engineering workflow.",
-      "Present diagrams and check utilization alongside the three-dimensional model.",
-      "Keep solver selection and design results tied to the current model and load cases.",
-    ],
-    image: "/images/truss/1-structures.png",
-    imageAlt: "Truss Design workspace showing steel section properties and a three-dimensional truss model with applied loads",
-    imageWidth: 1654,
-    imageHeight: 809,
+    image: "/images/truss/1-pony-truss-bridge.png",
+    imageAlt: "Pony truss pedestrian bridge model with U-frame behaviour and no overhead bracing",
+    imageWidth: 1830,
+    imageHeight: 1082,
     gallery: [
-      { src: "/images/truss/2-result.png", alt: "Truss frame model with an internal-force diagram displayed over the members", caption: "Analysis results and member-force diagram", width: 1658, height: 816 },
-      { src: "/images/truss/3-codecheck.png", alt: "KDS 2024 LRFD Code Check panel with member utilization and results shown on the truss model", caption: "Steel H-member Code Check", width: 1655, height: 758 },
+      { src: "/images/truss/2-member-influence-lines.png", alt: "Truss elevation with selected members and their axial-force influence lines", caption: "Influence lines for selected truss members", width: 1834, height: 1142 },
+      { src: "/images/truss/3-structural-model-and-sections.png", alt: "Three-dimensional truss model with steel section properties and applied loads", caption: "Structural model and section properties", width: 1654, height: 809 },
+      { src: "/images/truss/4-member-force-results.png", alt: "Truss bridge model with an internal-force diagram displayed over the members", caption: "Member-force result diagram", width: 1658, height: 816 },
+      { src: "/images/truss/5-steel-member-code-check.png", alt: "KDS 2024 LRFD code-check panel with member utilization displayed on the truss model", caption: "Steel member code checks", width: 1655, height: 758 },
     ],
   },
   {
@@ -270,90 +247,110 @@ export const projects: Project[] = [
     path: "/alignment",
     title: "Bridge Alignment",
     category: "Engineering software",
-    summary: "Horizontal and vertical alignment geometry for bridge layout and station-based review.",
+    summary: "Bridge Model workspace combining alignments, superelevation and girder grids with FEM model generation.",
     overview:
-      "Bridge Alignment is an independent geometry workspace for building horizontal routes and vertical profiles, reviewing their drawings and querying stations. It supports PI-based transitions and explicit line/arc input for horizontal geometry, alongside vertical grades and parabolic curves. The tool is being developed for the company's bridge-design automation workflow; the product is not publicly released, and the linked application is a demo.",
+      "Workspace for building a Bridge Model from horizontal and vertical alignments, superelevation and girder grids, then generating the FEM nodes and elements used for structural analysis.",
     introLink: { label: "Open Alignment demo", href: "https://struct-tools.vercel.app/alignment/" },
+    demoNote: internalProjectDemoNote,
     role: "Engineering geometry and software development",
     status: "In development",
     hideHeroMetadata: true,
     tags: ["Bridge geometry", "Horizontal alignment", "Vertical profile"],
     technicalCapabilities: {
       problem:
-        "Bridge layout and field coordination depend on consistent station, plan and profile geometry that can be inspected before it feeds a structural model.",
+        "One geometric source controls the alignment, deck surface, girder layout and FEM topology.",
       scope: [
-        "Author horizontal PI/radius transitions or explicit line and arc segments, with Clothoid, Bloss, Sinusoidal and Bi-quadratic transition options.",
-        "Define vertical grades and symmetric parabolic curves independently of the horizontal input.",
-        "Inspect horizontal, vertical and three-dimensional drawings and evaluate geometry at a selected station.",
-        "Save project/workspace JSON and export drawing vertices to Excel or DXF; optional Japanese reference comparisons do not establish full code compliance.",
+        "Apply multiple transition-curve formulations used by road and bridge alignment standards, including Clothoid, Bloss, Sinusoidal and Bi-quadratic curves.",
+        "Generate geometrically consistent 3D deck surfaces for bridges with simultaneous horizontal curvature, vertical profile and variable superelevation.",
+        "Export the Bridge Model as an FEM model with generated node and element topology for downstream structural analysis.",
       ],
     },
-    contributions: [
-      "Build editable horizontal and vertical geometry workflows with input validation.",
-      "Connect station evaluation and review drawings to the same alignment definition.",
-      "Provide portable project data and drawing exports for downstream coordination.",
-    ],
     image: "/images/alignment/1-alignment.png",
     imageAlt: "Bridge Alignment editor with horizontal PI and vertical profile tables beside plan and elevation plots",
     imageWidth: 1657,
     imageHeight: 814,
+    gallery: [
+      { src: "/images/alignment/2-bridge-deck-edge-alignments.png", alt: "Composite bridge deck editor showing independent left and right edge alignments in plan and vertical profile", caption: "Independent deck-edge alignments and profiles", width: 3104, height: 2024 },
+      { src: "/images/alignment/3-generated-deck-surface.png", alt: "Three-dimensional curved bridge deck surface generated from the edge alignment geometry", caption: "Three-dimensional deck surface generated from alignment geometry", width: 3104, height: 2024 },
+    ],
     featured: true,
   },
   {
     slug: "steel-bridge-analysis",
     path: "/steelbridge",
-    title: "Steel Bridge Designer",
+    title: "Composite Bridge Designer",
     category: "Engineering software",
-    summary: "Parametric composite I/box girder modelling and three-dimensional bridge analysis.",
+    summary: "Design workspace for steel-concrete composite I-girder and box-girder bridges.",
     overview:
-      "Steel Bridge Designer brings composite I-girder and box-girder geometry, bridge layout, structural analysis and result review into one workspace. The Bridge application handles a three-dimensional frame network, static load cases and multi-lane truck/lane loading, with views for girder forces and section-stress previews. It is being developed to automate the company's bridge-design workflow; the product is not publicly released, and the linked application is a demo. Complete composite design verification is still under development.",
+      "Design workspace for steel-concrete composite I-girder and box-girder bridges, from geometric bridge definition to FEM analysis, design checks and quantities.",
     introLink: { label: "Open Bridge demo", href: "https://struct-tools.vercel.app/bridge/" },
+    demoNote: internalProjectDemoNote,
     role: "Bridge engineering and software development",
     status: "In development",
     hideHeroMetadata: true,
-    tags: ["Steel bridges", "Composite girders", "3D analysis"],
+    tags: ["Composite bridges", "I and box girders", "FEM analysis"],
     technicalCapabilities: {
       problem:
-        "Bridge design requires the girder geometry, structural network, loading and response to remain connected as the model changes.",
+        "The physical bridge definition remains the source model for analysis, design checks and quantities throughout each design revision.",
       scope: [
-        "Define composite I-girder and open or closed box-girder sections and inspect the resulting bridge model.",
-        "Review girder arrangements and dimensional drawings generated from the structural geometry.",
-        "Analyse static load cases and multi-lane truck/lane actions with OpenSees as the default solver or an explicitly selected Frame Solver.",
-        "Inspect girder moment diagrams and section-stress preview or envelope views with their load-case context.",
-        "Review composite I/box research coverage while complete numerical design checks and governed design export remain in development.",
+        "Build the physical Bridge Model from alignments, superelevation, deck and girder configuration, and section details; automatically generate the corresponding FEM Model.",
+        {
+          text: "Moving-load analysis is handled by an in-house solver developed specifically for this project. For each linear prismatic Euler–Bernoulli source element, four independent unit-load states determine a continuous cubic influence branch, H(s) = As³ + Bs² + Cs + D. While the truck axles remain on their current branches, the total response is also cubic; the solver evaluates every interval endpoint and each valid root of M′(x) = 0 to locate the governing truck position, axle positions and individual axle contributions. This removes the position grid, avoids a new FEM solve for every vehicle position and prevents a peak between sampled positions from being missed.",
+          link: {
+            label: "Read the moving-load solver explanation",
+            href: "/blogs/finding-the-governing-truck-position",
+          },
+        },
+        "Review reactions, girder-force diagrams and section-stress envelopes together with the governing load case and moving-load position.",
+        "Perform code-based checks for composite I-girder and box-girder systems, then export material quantity take-offs.",
       ],
     },
-    contributions: [
-      "Connect section input, bridge geometry and three-dimensional analysis in one workflow.",
-      "Expose girder drawings and structural response on the model for engineering review.",
-      "Keep analysis and preview results linked to the selected load cases and current geometry.",
-    ],
-    image: "/images/steel-bridge/1-i-girder.png",
-    imageAlt: "Steel Bridge Designer showing a composite I-girder bridge model and section properties",
+    image: "/images/composite-bridge/1-composite-i-girder-model.png",
+    imageAlt: "Composite Bridge Designer showing a steel-concrete composite I-girder bridge model and section properties",
     imageWidth: 1656,
     imageHeight: 761,
     gallery: [
-      { src: "/images/steel-bridge/2-box-girder.png", alt: "Composite box-girder bridge model with box-section input fields", caption: "Composite box-girder geometry", width: 1660, height: 763 },
-      { src: "/images/steel-bridge/3-girder-dim.png", alt: "Girder dimension drawing showing flange, web and connection details along the bridge length", caption: "Girder layout and dimensional drawing", width: 1657, height: 763 },
-      { src: "/images/steel-bridge/4-moment.png", alt: "Three-dimensional bridge model with a girder bending-moment diagram for a selected load case", caption: "Girder moment diagram", width: 1654, height: 756 },
-      { src: "/images/steel-bridge/6-stress.png", alt: "Three-dimensional bridge model with a selected top-flange stress envelope displayed along a girder", caption: "Top-flange stress envelope preview", width: 1662, height: 760 },
+      { src: "/images/composite-bridge/2-composite-box-girder-model.png", alt: "Steel-concrete composite box-girder bridge model with box-section input fields", caption: "Composite box-girder model", width: 1660, height: 763 },
+      { src: "/images/composite-bridge/3-girder-detail-drawing.png", alt: "Girder detail drawing showing flange, web and connection dimensions along the bridge length", caption: "Girder layout and detail drawing", width: 1657, height: 763 },
+      { src: "/images/composite-bridge/4-girder-moment-diagram.png", alt: "Three-dimensional composite bridge model with a girder bending-moment diagram for a selected load case", caption: "Girder moment diagram", width: 1654, height: 756 },
+      { src: "/images/composite-bridge/5-section-stress-envelope.png", alt: "Three-dimensional composite bridge model with a selected top-flange stress envelope", caption: "Section-stress envelope", width: 1662, height: 760 },
     ],
     featured: true,
   },
   {
     slug: "scaffold-frame",
-    title: "Scaffold Frame",
+    path: "/scaffolding",
+    title: "Scaffolding Designer",
     category: "Engineering software",
-    summary: "Structural CAD, frame analysis and steel member checks for scaffolding systems.",
+    summary: "Integrated design workspace for pylon-mounted scaffolding used in cable-stayed bridge construction.",
     overview:
-      "A purpose-built structural engineering application combining parametric CAD, finite-element analysis and documented steel member checks for scaffold and frame systems.",
-    role: "Engineering method and software development",
+      "Scaffolding Designer is a desktop and web workspace for designing pylon-mounted scaffolding used during cable-stayed bridge construction. It connects the structural model, real-time FEM analysis, code-based checks, connection and anchor design, quantities, drawings and downstream detailing in one workflow.",
+    role: "Bridge temporary-works engineering and software development",
     status: "In development",
-    tags: ["Structural CAD", "Finite-element analysis", "Steel design"],
-    contributions: [
-      "Build parametric models for nodes, members, plates, restraints and loads.",
-      "Connect browser and OpenSeesPy analysis paths to a shared structural model.",
-      "Generate reviewable results, drawings and calculation packages within the implemented scope.",
+    hideHeroMetadata: true,
+    tags: ["Bridge scaffolding", "Connections and anchors", "Design automation"],
+    technicalCapabilities: {
+      problem:
+        "The global frame, critical connections, pylon anchorages and fabrication outputs remain coordinated in one model.",
+      scope: [
+        "Use a purpose-built, high-performance frame solver for immediate reactions, deformed shapes and member-force results as the model or loading changes.",
+        "Use modelling wizards to generate predefined scaffolding configurations, including pylon-mounted systems for cable-stayed bridge construction.",
+        "Define scaffolding-specific load cases for floor, wind and temperature loads.",
+        "Rank connections by demand, design critical steel joints and pylon anchorages, and exchange models with IDEA StatiCa and Hilti anchor-design software.",
+        "Export construction drawings and quantity schedules, with model coordination links to Tekla.",
+      ],
+    },
+    image: "/images/scaffolding/1-fem-analysis-model.png",
+    imageAlt: "Scaffolding Designer FEM workspace showing a pylon-mounted steel scaffolding model and analysis statistics",
+    imageWidth: 3104,
+    imageHeight: 2024,
+    gallery: [
+      { src: "/images/scaffolding/2-connection-demand-ranking.png", alt: "Scaffolding connection list sorted by relative demand beside the three-dimensional structural model", caption: "Demand-based connection ranking", width: 3056, height: 2024 },
+      { src: "/images/scaffolding/3-connection-design-module.png", alt: "Three-dimensional steel joint in the Scaffolding Designer connection module", caption: "Connection design module", width: 3056, height: 2024 },
+      { src: "/images/scaffolding/4-global-moment-diagram.png", alt: "Scaffolding FEM result view with a global member moment diagram", caption: "Global frame moment diagram", width: 3056, height: 2024 },
+      { src: "/images/scaffolding/5-critical-frame-result.png", alt: "Detailed FEM result view around a critical region of the scaffolding frame", caption: "Critical-region force result", width: 3056, height: 2024 },
+      { src: "/images/scaffolding/6-full-model-force-results.png", alt: "Full scaffolding model with member-force result diagrams and numerical labels", caption: "Full-model member-force review", width: 3056, height: 2024 },
+      { src: "/images/scaffolding/7-floor-load-definition.png", alt: "Scaffolding load editor showing floor-load definition on the structural model", caption: "Floor-load definition and load-case review", width: 3056, height: 2024 },
     ],
   },
   {
@@ -365,6 +362,7 @@ export const projects: Project[] = [
     overview:
       "Anchor Designer brings connection geometry, factored load cases, base-plate analysis and anchor-to-concrete verification into one reviewable workflow. Its OpenSeesPy backend models plate response, concrete contact and anchor tension; only results that pass the required analysis gates can feed the current KDS checks. The project is a development baseline, not design certification or a complete connection-design release.",
     introLink: { label: "Open Anchor Designer", href: "https://anchor-designer.vercel.app/" },
+    demoNote: internalProjectDemoNote,
     role: "Engineering method and software development",
     status: "In development",
     hideHeroMetadata: true,
@@ -381,11 +379,6 @@ export const projects: Project[] = [
         "Export a read-only Excel record of inputs, convergence, demands, checks and diagnostics.",
       ],
     },
-    contributions: [
-      "Connect connection modelling, load definition, analysis, verification and reporting in one browser workflow.",
-      "Build the base-plate FEM path and its evidence gates around an OpenSeesPy analysis backend.",
-      "Translate accepted anchor demand into traceable KDS checks and an exportable calculation record.",
-    ],
     image: "/images/anchor/1-model.png",
     imageAlt: "Anchor Designer modelling workspace with a three-dimensional base plate, steel profile, anchors and concrete block",
     imageWidth: 1608,
@@ -403,29 +396,26 @@ export const projects: Project[] = [
     path: "/movingload",
     title: "Moving Load",
     category: "Engineering software",
-    summary: "Truck, lane and combined moving-load analysis for a single bridge girder.",
+    summary: "Continuous influence-line solver for locating governing moving-load positions on bridge girders.",
     overview:
-      "Moving Load is the Beam application in the JSCAD workspace. It evaluates a single-girder model in the XZ plane under truck, lane and concurrent truck/lane cases, then presents influence lines, physical loading positions and internal-force envelopes. It is being developed for the company's bridge-design automation workflow; the product is not publicly released, and the linked application is a demo.",
+      "Bridge-girder analysis workspace that uses continuous influence functions to locate governing truck, lane and combined truck/lane positions without stepping loads across a discrete position grid.",
     introLink: { label: "Open Beam demo", href: "https://struct-tools.vercel.app/beam/" },
+    demoNote: internalProjectDemoNote,
     role: "Structural analysis and software development",
     status: "In development",
     hideHeroMetadata: true,
     tags: ["Moving loads", "Beam analysis", "Influence lines"],
     technicalCapabilities: {
       problem:
-        "Moving vehicles and lane loading create different governing positions along a bridge girder, so response envelopes need to retain the loading arrangement behind each result.",
+        "The governing moving-load response can occur between sampled vehicle positions; reducing the spacing may still miss the exact peak while requiring many repeated FEM solutions.",
       scope: [
-        "Define truck-only, lane-only and concurrent truck/lane moving-load cases on a single-girder model.",
-        "Run linear frame analysis with the browser solver or an optional OpenSees backend.",
-        "Inspect influence lines, vehicle and lane placement, and maximum or minimum force envelopes.",
-        "Review static load cases and moving results in the shared load-case and combination workflow; member design checks are outside the Beam product scope.",
+        "Build a continuous influence function for the selected response. For each linear prismatic Euler–Bernoulli source element, four independent unit-load states provide four response values, which determine the coefficients of the cubic branch H(s) = As³ + Bs² + Cs + D. The response can then be evaluated at any position within that branch instead of only at sampled points.",
+        "Partition the vehicle travel range into intervals at the positions where an axle changes influence-line branch. Within each interval, the response of a truck at position x is M(x) = ΣPᵢH(x + aᵢ), where Pᵢ is an axle load and aᵢ is its offset from the truck reference position. Because every active H branch is cubic, their weighted sum is also cubic: M(x) = αx³ + βx² + γx + δ.",
+        "Find every possible internal extreme by solving M′(x) = 3αx² + 2βx + γ = 0. For each interval, evaluate its left endpoint, right endpoint and the zero, one or two derivative roots that lie inside the interval, giving no more than four candidate truck positions.",
+        "Compare the candidates from all intervals to obtain the governing response, truck position, every axle position and each axle contribution. This finds extrema between conventional sampling points without a position grid and without repeating the FEM solution for every vehicle location.",
+        "Apply the solver to truck-only, lane-only and combined truck/lane cases, then display the governing physical load placement, influence lines and maximum/minimum force envelopes.",
       ],
     },
-    contributions: [
-      "Connect girder modelling and moving-load definitions to one analysis workflow.",
-      "Show physical truck/lane loading positions beside influence and envelope results.",
-      "Keep static, moving and combination results distinguishable for review.",
-    ],
     image: "/images/moving-load/1-truckload.png",
     imageAlt: "Beam demo showing a vehicle on a girder beside a moving-load influence line for bending moment",
     imageWidth: 1655,
@@ -460,11 +450,6 @@ export const projects: Project[] = [
         "Track budgets, contract changes, labor costs, cost ratios and financial trends for individual projects.",
       ],
     },
-    contributions: [
-      "Build the work-record and approval workflow for employees and managers.",
-      "Connect staffing, project records and financial data in a shared workspace.",
-      "Present project and workforce activity through dashboards, charts and allocation views.",
-    ],
     image: "/images/timesheets/1-dashboard.png",
     imageAlt: "Timesheets dashboard showing work activity and project and task distribution charts",
     imageWidth: 1573,
@@ -493,9 +478,10 @@ const softwareProjectOrder = [
   "pus-pro",
   "castcontrol",
   "rc-designer",
-  "anchor-designer",
+  "scaffold-frame",
   "truss-designer",
   "steel-bridge-analysis",
+  "anchor-designer",
   "bridge-alignment",
   "moving-load",
   "timesheets",

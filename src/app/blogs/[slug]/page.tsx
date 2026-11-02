@@ -42,19 +42,21 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
       <div className="blog-article__body">{original.text}</div>
 
-      <div className="blog-article__gallery" aria-label="Images from the original LinkedIn post">
-        {post.images.map((image, index) => (
-          <figure className="blog-article__image" key={`${post.id}-${index}`}>
-            <Image
-              src={`/images/blogs/${post.id}-${index + 1}.jpg`}
-              alt={image.alt}
-              width={image.width}
-              height={image.height}
-              sizes="(max-width: 760px) 100vw, (max-width: 1100px) 50vw, 560px"
-            />
-          </figure>
-        ))}
-      </div>
+      {post.images.length > 0 ? (
+        <div className="blog-article__gallery" aria-label="Images from the original LinkedIn post">
+          {post.images.map((image, index) => (
+            <figure className="blog-article__image" key={`${post.id}-${index}`}>
+              <Image
+                src={`/images/blogs/${post.id}-${index + 1}.jpg`}
+                alt={image.alt}
+                width={image.width}
+                height={image.height}
+                sizes="(max-width: 760px) 100vw, (max-width: 1100px) 50vw, 560px"
+              />
+            </figure>
+          ))}
+        </div>
+      ) : null}
 
       <a href={post.linkedinUrl} className="link-out" target="_blank" rel="noopener noreferrer">Read the original post on LinkedIn ↗</a>
     </article>

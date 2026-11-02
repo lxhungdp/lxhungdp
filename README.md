@@ -19,15 +19,15 @@ I design and verify bridge structures, and build software for structural analysi
 | [PUS Pro Program](https://lehung.dev/pus) | Combines bridge geometry, structural analysis, design checks, calculation sheets and quantity take-offs for prestressed concrete composited opening U-type steel box-girder bridges. |
 | [CastControl](https://lehung.dev/castcontrol) | Coordinates short-line segmental bridge geometry, linking field survey data with engineering review and approved coordinates. |
 | [Reinforced Concrete Section Designer](https://lehung.dev/RCdesigner) | Evaluates axial-force and biaxial-bending section resistance, interaction surfaces and factored demand checks. [Source code](https://github.com/lxhungdp/RC-concrete-section). |
+| [Scaffolding Designer](https://lehung.dev/scaffolding) | Designs pylon-mounted scaffolding with FEM analysis, code checks, connection and anchor modules, quantities and construction drawings. |
+| [Truss Bridge Designer](https://lehung.dev/truss) | Automates truss-bridge design with FEM analysis, code checks, member influence lines and pedestrian vibration analysis. |
+| [Composite Bridge Designer](https://lehung.dev/steelbridge) | Designs steel-concrete composite I-girder and box-girder bridges with bridge/FEM models, moving-load analysis and code checks. |
 | [Anchor Designer](https://lehung.dev/anchor) | Development-stage workspace for anchor-to-concrete checks and base-plate finite-element analysis; it is not a certified design tool. |
-| [Truss Design](https://lehung.dev/truss) | Models and analyzes truss/frame systems with scoped steel H-member checks. |
-| [Steel Bridge Designer](https://lehung.dev/steelbridge) | Models composite I/box girders and reviews three-dimensional bridge analysis and response previews. |
 | [Bridge Alignment](https://lehung.dev/alignment) | Authors horizontal and vertical alignment geometry with station-based review and drawing exports. |
 | [Moving Load](https://lehung.dev/movingload) | Analyzes truck, lane and combined moving loads on a single girder with influence lines and force envelopes. |
 | [Timesheets](https://lehung.dev/timesheets) | Connects work records and approvals with project staffing, budgets and performance reporting; used internally and by construction consulting firms. |
-| [Scaffold Frame](https://lehung.dev/work/scaffold-frame) | In-development structural CAD, frame analysis and steel member checks for scaffolding systems. |
 
-Alignment, Truss, Moving Load (Beam) and Steel Bridge are being developed for internal bridge-design automation. Their linked applications are demos; the products are not publicly released.
+Scaffolding Designer, Truss Bridge Designer, Composite Bridge Designer, Bridge Alignment and Moving Load are being developed for internal bridge-design automation. Their linked applications, where available, are demos; the products are not publicly released.
 
 ## Bridge engineering
 

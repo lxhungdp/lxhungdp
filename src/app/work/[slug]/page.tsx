@@ -90,13 +90,6 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
           <p>{project.overview}</p>
         </section>
 
-        <section aria-labelledby="contribution-title">
-          <h2 id="contribution-title">Contribution</h2>
-          <ul>
-            {project.contributions.map((item) => <li key={item}>{item}</li>)}
-          </ul>
-        </section>
-
         {project.outcome && (
           <section aria-labelledby="outcome-title">
             <h2 id="outcome-title">Outcome</h2>

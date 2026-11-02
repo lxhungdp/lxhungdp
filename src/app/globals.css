@@ -797,6 +797,10 @@ img {
   border-bottom: 1px solid var(--line);
 }
 
+.project-section:last-child {
+  border-bottom: 0;
+}
+
 .project-section__content {
   min-width: 0;
 }
@@ -851,6 +855,12 @@ img {
   padding: var(--sp-4) var(--sp-5);
   border: 1px solid var(--line);
   border-radius: var(--radius-sm);
+  background: var(--surface);
+}
+
+.project-demo-note {
+  padding: var(--sp-4) var(--sp-5);
+  border-left: 2px solid var(--accent);
   background: var(--surface);
 }
 
